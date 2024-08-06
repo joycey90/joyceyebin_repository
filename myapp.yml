@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bayviewimage2
+  name: myapp
   labels:
-    app: bayviewimage2
+    app: myapp
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: bayviewimage2
+      app: myapp
   template:
     metadata:
       labels:
-        app: bayviewimage2
+        app: myapp
     spec:
       containers:
-      - name: bayviewimage2
-        image: joyceyprojectregistry.azurecr.io/image
+      - name: myapp
+        image: bayviewacr.azurecr.io/myapp
         resources:
           requests:
             cpu: 100m
@@ -31,30 +31,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bayviewimage2
+  name: myapp
 spec:
   selector:
-    app: bayviewimage2
-  type: ClusterIP
+    app: myapp
+  type: LoadBalancer
   ports:
   - port: 80
-    targetPort: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: bayviewimage2-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: <your-domain>
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: bayviewimage2
-            port:
-              number: 80
